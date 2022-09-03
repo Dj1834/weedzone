@@ -62,11 +62,11 @@ class EngineStatus:
     STATUS_EXT = "Extract | pExtract"
     STATUS_SPLIT = "FFmpeg v2.9.1"
     STATUS_ZIP = "p7zip v16.02"
-    
- 
 
+    
+    
 PROGRESS_MAX_SIZE = 100 // 8
-PROGRESS_INCOMPLETE = ["◐", "◑", "◒", "◓", "◒", "◑", "◐"]
+PROGRESS_INCOMPLETE = ["◐", "◑", "◒", "◑", "◓", "◐", "◒"]
     
 SIZE_UNITS = ['B', 'KB', 'MB', 'GB', 'TB', 'PB']
 
@@ -156,7 +156,7 @@ def get_progress_bar_string(status):
     if cPart >= 0:
         p_str += PROGRESS_INCOMPLETE[cPart]
     p_str += UN_FINISHED_PROGRESS_STR  * (12 - cFull)
-    p_str = f"「{p_str}」"
+    p_str = f"[{p_str}]"
     return p_str
 
 
@@ -171,20 +171,20 @@ def get_readable_message():
                 globals()['COUNT'] -= STATUS_LIMIT
                 globals()['PAGE_NO'] -= 1
         for index, download in enumerate(list(download_dict.values())[COUNT:], start=1):
-            msg += f"<b>╭ <a href='{download.message.link}'>{download.status()}</a>: </b>"
+            msg += f"<a href='{download.message.link}'>{download.status()}</a>: </b>"
             msg += f"<code>{escape(str(download.name()))}</code>"
             if download.status() not in [MirrorStatus.STATUS_SEEDING, MirrorStatus.STATUS_SPLITTING]:
                 if EMOJI_THEME is True:
-                    msg += f"\n<b>{get_progress_bar_string(download)} {download.progress()}"
-                    msg += f"\n<b>Processed:</b> {get_readable_file_size(download.processed_bytes())} of {download.size()}"
-                    msg += f"\n<b>Speed:</b> {download.speed()}"
-                    msg += f"\n<b>ETA:</b> {download.eta()}"
-                    msg += f"\n<b>Elapsed: </b>{get_readable_time(time() - download.message.date.timestamp())}"
-                    msg += f"\n<b>Engine :</b> {download.eng()}"
-                    msg += f"\n<b>Warn: </b> <code>/warn {download.message.from_user.id}</code>"
+                    msg += f"\n<b>├</b>{get_progress_bar_string(download)} {download.progress()}"
+                    msg += f"\n<b>├🔄 Process:</b> {get_readable_file_size(download.processed_bytes())} of {download.size()}"
+                    msg += f"\n<b>├⚡ Speed:</b> {download.speed()}"
+                    msg += f"\n<b>├⏳ ETA:</b> {download.eta()}"
+                    msg += f"\n<b>├⏳ Elapsed: </b>{get_readable_time(time() - download.message.date.timestamp())}"
+                    msg += f"\n<b>├⛓️ Engine :</b> {download.eng()}"
+                    msg += f"\n<b>├⚠️ Warn: </b> <code>/warn {download.message.from_user.id}</code>"
                 else:
-                    msg += f"\n<b>{get_progress_bar_string(download)} {download.progress()}"
-                    msg += f"\n<b>Processed:</b> {get_readable_file_size(download.processed_bytes())} of {download.size()}"
+                    msg += f"\n {get_progress_bar_string(download)} {download.progress()}"
+                    msg += f"\n<b>Process:</b> {get_readable_file_size(download.processed_bytes())} of {download.size()}"
                     msg += f"\n<b>Speed:</b> {download.speed()}"
                     msg += f"\n<b>ETA:</b> {download.eta()}"
                     msg += f"\n<b>Elapsed: </b>{get_readable_time(time() - download.message.date.timestamp())}"
@@ -236,7 +236,7 @@ def get_readable_message():
                     msg += f"\n<b>Speed: </b>{download.upload_speed()}"
                     msg += f"\n<b>Uploaded: </b>{download.uploaded_bytes()}"
                     msg += f"\n<b>Ratio: </b>{download.ratio()}"
-                    msg += f" | <b> Time: </b>{download.seeding_time()}"
+                    msg += f" | <b>Time: </b>{download.seeding_time()}"
                     msg += f"\n<b>Elapsed: </b>{get_readable_time(time() - download.message.date.timestamp())}"
                     msg += f"\n<b>Cancel: </b><code>/{BotCommands.CancelMirror} {download.gid()}</code>"
             else:
