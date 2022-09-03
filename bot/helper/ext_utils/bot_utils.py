@@ -159,7 +159,7 @@ def get_progress_bar_string(status):
     p_str = f"[{p_str}]"
     return p_str
 
-
+    
 def get_readable_message():
     with download_dict_lock:
         msg = f""
@@ -171,7 +171,7 @@ def get_readable_message():
                 globals()['COUNT'] -= STATUS_LIMIT
                 globals()['PAGE_NO'] -= 1
         for index, download in enumerate(list(download_dict.values())[COUNT:], start=1):
-            msg += f"<a href='{download.message.link}'>{download.status()}</a>: </b>"
+            msg += f"<b>╭ <a href='{download.message.link}'>{download.status()}</a>: </b>"
             msg += f"<code>{escape(str(download.name()))}</code>"
             if download.status() not in [MirrorStatus.STATUS_SEEDING, MirrorStatus.STATUS_SPLITTING]:
                 if EMOJI_THEME is True:
@@ -183,7 +183,7 @@ def get_readable_message():
                     msg += f"\n<b>├⛓️ Engine :</b> {download.eng()}"
                     msg += f"\n<b>├⚠️ Warn: </b> <code>/warn {download.message.from_user.id}</code>"
                 else:
-                    msg += f"\n {get_progress_bar_string(download)} {download.progress()}"
+                    msg += f"\n<b>ㅤ</b>{get_progress_bar_string(download)} {download.progress()}"
                     msg += f"\n<b>Process:</b> {get_readable_file_size(download.processed_bytes())} of {download.size()}"
                     msg += f"\n<b>Speed:</b> {download.speed()}"
                     msg += f"\n<b>ETA:</b> {download.eta()}"
@@ -246,6 +246,7 @@ def get_readable_message():
                 else:
                     msg += f"\n<b>Engine :</b> {download.eng()}"
                     msg += f"\n<b>Size: </b>{download.size()}"
+            msg += f"\n<b>_____________________________________</b>"
             msg += "\n\n"
             if STATUS_LIMIT is not None and index == STATUS_LIMIT:
                 break
@@ -449,16 +450,13 @@ def bot_sys_stats():
                 num_split += 1
     stats = f"""
 CPU : {cpu}% | RAM : {mem}%
-
 DL : {num_active} | UP : {num_upload} | SPLIT : {num_split}
 ZIP : {num_archi} | UNZIP : {num_extract} | TOTAL : {tasks}
-
 Limits : T/D : {TORRENT_DIRECT_LIMIT}GB | Z/U : {ZIP_UNZIP_LIMIT}GB
                     L : {LEECH_LIMIT}GB | M : {MEGA_LIMIT}GB
-
 Made with ❤️ by {CREDIT_NAME}
 """
     return stats
 dispatcher.add_handler(
     CallbackQueryHandler(pop_up_stats, pattern="^" + str(THREE) + "$")
-)
+) 
